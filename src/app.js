@@ -11,26 +11,6 @@ app.use(cors());
 const repositories = [];
 let repositoryIndex = -1;
 
-function validateRequestBody(request, response, next){
-  const { title, url, techs } = request.body;
-
-  const errors = [];
-
-  if(title == null || title == '')
-    errors.push({ field: 'title',  message: 'Field is required,'});
-  
-  if(url == null || url == '')
-    errors.push({ field: 'url',  message: 'Field is required,'});
-  
-  if(techs == null || techs == "" || techs.length == 0)
-    errors.push({ field: 'techs',  message: 'Field is required,'});
-
-  if(errors.length > 0)
-    return response.status(400).json({ erros: errors });
-
-  return next();
-}
-
 function validateUuid(request, response, next){
   const { id } = request.params;
 
@@ -57,7 +37,7 @@ app.get("/repositories", (request, response) => {
   return response.json(repositories);
 });
 
-app.post("/repositories", validateRequestBody, (request, response) => {
+app.post("/repositories", (request, response) => {
   const { title, url, techs } = request.body;
 
   const repository = {
@@ -73,7 +53,7 @@ app.post("/repositories", validateRequestBody, (request, response) => {
   return response.status(201).json(repository);
 });
 
-app.put("/repositories/:id", validateRequestBody, (request, response) => {
+app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const { title, url, techs } = request.body;
   const { likes } = repositories[repositoryIndex];
